@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Portfolio Showcase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/framer-motion/dist/framer-motion.umd.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="text-center py-8">
+    <h1 class="text-4xl font-bold mb-2">🚀 My Project Showcase</h1>
+    <p class="text-gray-600">Here are some projects I’ve built</p>
+  </header>
+
+  <!-- Projects Grid -->
+  <main class="grid gap-8 px-6 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+
+    <!-- Project Card -->
+    <div 
+      class="bg-white shadow-lg rounded-2xl overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl"
+      onmouseover="motion.animate(this, { scale: 1.05 })"
+      onmouseout="motion.animate(this, { scale: 1 })"
+    >
+      <img src="todo-screenshot.png" alt="Todo App" class="w-full h-48 object-cover">
+      <div class="p-5">
+        <h2 class="text-xl font-semibold mb-2">Todo List App</h2>
+        <p class="text-sm text-gray-600">একটি ওয়েব অ্যাপ যেখানে ইউজার টাস্ক Add/Delete করতে পারে এবং data Local Storage এ save হয়।</p>
+        <div class="mt-4 flex gap-3">
+          <a href="https://your-demo-link.com" target="_blank" 
+             class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">Live Demo</a>
+          <a href="https://github.com/username/todo-app" target="_blank" 
+             class="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm hover:bg-gray-900">Source Code</a>
+        </div>
+      </div>
