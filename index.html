@@ -1,37 +1,420 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Portfolio Showcase</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/framer-motion/dist/framer-motion.umd.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moynul Metal Industries - Premium Admin</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+/* --- 0. Global Setup & Modern Variables --- */
+:root {
+    --bg-dark: #0f172a;
+    --card-glass: rgba(30, 41, 59, 0.7);
+    --primary: #38bdf8; /* Bright Blue */
+    --accent-green: #22c55e;
+    --accent-yellow: #fbbf24;
+    --accent-pink: #f472b6;
+    --text-white: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-glass: rgba(255, 255, 255, 0.1);
+    --glass-blur: blur(12px);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-dark);
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(129, 140, 248, 0.15) 0px, transparent 50%);
+    color: var(--text-white);
+    line-height: 1.5;
+    padding-top: 70px;
+    min-height: 100vh;
+}
+
+/* --- 1. Header & Side Menu --- */
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 65px;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: var(--glass-blur);
+    border-bottom: 1px solid var(--border-glass);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 1000;
+}
+
+.brand {
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    flex-grow: 1;
+}
+
+.menu-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-glass);
+    color: var(--primary);
+    font-size: 1.6rem;
+    padding: 5px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.menu-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 280px;
+    height: 100%;
+    background: rgba(69, 78, 100, 0.6);
+    backdrop-filter: blur(20px);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.4);
+    transform: translateX(100%);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 20px;
+    z-index: 1010;
+}
+
+.menu-panel.open { transform: translateX(0); }
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text-white);
+    background: rgba(43, 38, 38, 0.6);
+    border: 1px solid transparent;
+    transition: 0.3s;
+}
+
+.menu-item:hover {
+    background: rgba(56, 189, 248, 0.15);
+    border-color: var(--primary);
+}
+
+.menu-item .ico { margin-right: 12px; font-size: 1.2rem; }
+
+/* --- 2. Dashboard Stats --- */
+main {
+    padding: 15px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.dashboard-header {
+    background: var(--card-glass);
+    border: 1px solid var(--border-glass);
+    padding: 20px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+}
+
+.dashboard-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.dashboard-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+@media (min-width: 600px) {
+    .dashboard-metrics { grid-template-columns: repeat(4, 1fr); }
+}
+
+.metric-card {
+    background: rgba(15, 23, 42, 0.5);
+    padding: 15px;
+    border-radius: 15px;
+    border-left: 4px solid var(--primary);
+    transition: 0.3s;
+}
+
+.metric-symbol { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
+.metric-value { font-size: 1.2rem; font-weight: 700; display: block; margin-top: 5px; }
+
+.total-kilos { border-left-color: var(--accent-green); }
+.total-taka { border-left-color: var(--accent-yellow); }
+.total-color { border-left-color: var(--accent-pink); }
+
+/* --- 3. Sections & Transitions --- */
+.section { display: none; animation: slideUp 0.4s ease forwards; }
+.section.active { display: block; }
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* forms */
+.daily-card, .ledger-box {
+    background: var(--card-glass);
+    padding: 25px;
+    border-radius: 20px;
+    border: 1px solid var(--border-glass);
+    width: 100%;
+}
+
+h2, .ledger-title {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: var(--primary);
+    border-left: 4px solid var(--primary);
+    padding-left: 12px;
+}
+
+.input-group input, .input-group select, .worker-input {
+    width: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border-glass);
+    padding: 12px;
+    border-radius: 10px;
+    color: white;
+    margin-bottom: 15px;
+    outline: none;
+}
+
+.input-group input:focus { border-color: var(--primary); }
+
+.add-btn, .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, #0ea5e9, #6366f1);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* --- 4. Worker List Card --- */
+.card {
+    background: var(--card-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.stat-box {
+    background: rgba(255,255,255,0.03);
+    padding: 10px;
+    border-radius: 12px;
+}
+
+.stat-box h3 { font-size: 1.1rem; color: var(--accent-green); }
+
+.worker-breakdown-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin: 15px 0;
+}
+
+.breakdown-item {
+    background: rgba(15, 23, 42, 0.4);
+    padding: 8px 2px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--border-glass);
+}
+
+.breakdown-item .day { font-size: 0.65rem; color: var(--text-muted); display: block; }
+.breakdown-item .value { font-size: 0.75rem; font-weight: 700; color: var(--primary); }
+.breakdown-item.chuti { border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.1); }
+.breakdown-item.chuti .value { color: #ef4444; }
+
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body>
 
-  <!-- Header -->
-  <header class="text-center py-8">
-    <h1 class="text-4xl font-bold mb-2">🚀 My Project Showcase</h1>
-    <p class="text-gray-600">Here are some projects I’ve built</p>
-  </header>
+<header class="header">
+  <button id="menuBtn" class="menu-btn">☰</button>
+  <div class="brand" style="margin-left: 15px;">EKLAPOTHIK</div>
+  
+  <nav id="mainMenu" class="menu-panel">
+    <div style="text-align: right; margin-bottom: 20px;">
+        <button onclick="toggleMenu()" style="background:none; border:none; color:white; font-size: 2rem; cursor:pointer;">&times;</button>
+    </div>
+    <div class="menu-grid">
+      <a class="menu-item" onclick="showSection('addwrkvlu')">
+        <span class="ico">📝</span><span class="text">Add Work</span>
+      </a>
+      <a class="menu-item" onclick="showSection('add-new-worker')">
+        <span class="ico">＋</span><span class="text">New Worker</span>
+      </a>
+      <a class="menu-item" onclick="showSection('workerlist')">
+        <span class="ico">👥</span><span class="text">Worker List</span>
+      </a>
+      <a class="menu-item">
+        <span class="ico">📆</span><span class="text">Daily Card</span>
+      </a>
+      <a class="menu-item">
+        <span class="ico">⚙️</span><span class="text">Settings</span>
+      </a>
+    </div>
+  </nav>
+</header>
 
-  <!-- Projects Grid -->
-  <main class="grid gap-8 px-6 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-
-    <!-- Project Card -->
-    <div 
-      class="bg-white shadow-lg rounded-2xl overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl"
-      onmouseover="motion.animate(this, { scale: 1.05 })"
-      onmouseout="motion.animate(this, { scale: 1 })"
-    >
-      <img src="todo-screenshot.png" alt="Todo App" class="w-full h-48 object-cover">
-      <div class="p-5">
-        <h2 class="text-xl font-semibold mb-2">Todo List App</h2>
-        <p class="text-sm text-gray-600">একটি ওয়েব অ্যাপ যেখানে ইউজার টাস্ক Add/Delete করতে পারে এবং data Local Storage এ save হয়।</p>
-        <div class="mt-4 flex gap-3">
-          <a href="https://your-demo-link.com" target="_blank" 
-             class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">Live Demo</a>
-          <a href="https://github.com/username/todo-app" target="_blank" 
-             class="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm hover:bg-gray-900">Source Code</a>
-        </div>
+<main>
+  <section class="dashboard-header">
+    <div class="dashboard-info">
+      <span style="font-weight: 600;">Overview Metrics</span>
+      <span style="color: var(--text-muted); font-size: 0.85rem;">13/12/2025</span>
+    </div>
+    <div class="dashboard-metrics">
+      <div class="metric-card">
+        <span class="metric-symbol">WORKERS</span>
+        <span class="metric-value">5</span>
       </div>
+      <div class="metric-card total-kilos">
+        <span class="metric-symbol">TOTAL KG</span>
+        <span class="metric-value">2,525</span>
+      </div>
+      <div class="metric-card total-taka">
+        <span class="metric-symbol">TOTAL TK</span>
+        <span class="metric-value">25,250 ৳</span>
+      </div>
+      <div class="metric-card total-color">
+        <span class="metric-symbol">COLOR</span>
+        <span class="metric-value">300</span>
+      </div>
+    </div>
+  </section>
+
+  <div id="addwrkvlu" class="section active">
+    <div class="daily-card">
+      <h2>➤ Add Daily Work</h2>
+      <div class="input-group">
+        <input type="number" placeholder="Enter Work Value..." required>
+        <select required>
+            <option value="">Select Worker Name</option>
+            <option>eklapothik — Cutting</option>
+            <option>Rahim — Color</option>
+            <option>Karim — Rebid</option>
+            <option>Siam — Helper</option>
+        </select>
+        <button class="add-btn">Add Work Now</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="add-new-worker" class="section">
+    <div class="ledger-box">
+        <div class="ledger-title">ADD NEW WORKER</div>
+        <div style="margin-bottom: 20px;">
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;">Categories:</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem;">
+                <label><input type="checkbox"> Cutting Mistory</label>
+                <label><input type="checkbox"> Reabit Men</label>
+                <label><input type="checkbox"> Color Mistory</label>
+                <label><input type="checkbox"> Color Helper</label>
+                <label><input type="checkbox"> Mohila</label>
+            </div>
+        </div>
+        <label style="display:block; margin-bottom: 5px; font-size: 0.9rem;">Worker Name:</label>
+        <input type="text" class="worker-input" placeholder="Enter worker name">
+        <button class="submit-btn">Submit Worker</button>
+    </div>
+  </div>
+
+  <div id="workerlist" class="section">
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h3 style="font-size: 1.1rem;">Pothik Hossain</h3>
+                <span style="font-size: 0.75rem; color: var(--accent-green);">● Live Status</span>
+            </div>
+            <button style="background:none; border: 1px solid var(--primary); color: var(--primary); padding: 4px 10px; border-radius: 8px; font-size: 0.7rem;">Details</button>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-box">
+                <p style="font-size: 0.7rem; color: var(--text-muted);">Total TK</p>
+                <h3>24.5K</h3>
+            </div>
+            <div class="stat-box">
+                <p style="font-size: 0.7rem; color: var(--text-muted);">Total KG</p>
+                <h3>950</h3>
+            </div>
+        </div>
+
+        <div class="worker-breakdown-row">
+            <div class="breakdown-item"><span class="day">SAT</span><span class="value">380</span></div>
+            <div class="breakdown-item"><span class="day">SUN</span><span class="value">100</span></div>
+            <div class="breakdown-item"><span class="day">MON</span><span class="value">350</span></div>
+            <div class="breakdown-item"><span class="day">TUE</span><span class="value">450</span></div>
+            <div class="breakdown-item"><span class="day">WED</span><span class="value">250</span></div>
+            <div class="breakdown-item"><span class="day">THU</span><span class="value">275</span></div>
+            <div class="breakdown-item chuti"><span class="day">FRI</span><span class="value">OFF</span></div>
+        </div>
+        <p style="font-size: 0.7rem; color: var(--text-muted); text-align: center;">Last 7 days performance</p>
+    </div>
+  </div>
+
+</main>
+
+<script>
+    const menuBtn = document.getElementById('menuBtn');
+    const menu = document.getElementById('mainMenu');
+
+    function toggleMenu() {
+        menu.classList.toggle('open');
+    }
+
+    menuBtn.onclick = (e) => {
+        e.stopPropagation();
+        toggleMenu();
+    };
+
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        toggleMenu(); // ক্লোজ মেনু
+    }
+
+    // ক্লিক আউটসাইড টু ক্লোজ মেনু
+    document.onclick = (e) => {
+        if (!menu.contains(e.target) && menu.classList.contains('open')) {
+            toggleMenu();
+        }
+    };
+</script>
+
+</body>
+</html>
